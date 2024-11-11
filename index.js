@@ -1,6 +1,16 @@
 const express = require ('express');
 const app = express();
 
+const sequelize = require('./config/db');
+
+sequelize.authenticate()
+    .then(() => {
+        console.log("Conectei no banco");
+    })
+    .catch(error => {
+        console.log (`Deu erro ao conectar no bd ${error}`)
+    });
+
 //app.METODO('ROTA/CAMINHO', (req, res) => {})
 app.get('/users', (req, res) => {
     res.send("Nessa rota vou retornar os usuários");
