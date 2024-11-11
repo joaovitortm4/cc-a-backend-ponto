@@ -2,6 +2,15 @@ const express = require ('express');
 const app = express();
 
 const sequelize = require('./config/db');
+const Usuario = require('./models/Usuario');
+
+Usuario.sync()
+    .then(() => {
+        console.log("SUCESSO!");
+    })
+    .catch(error => {
+        console.log(`Erro ao sincronizar as tabelas - ${error}`)
+    })
 
 sequelize.authenticate()
     .then(() => {
