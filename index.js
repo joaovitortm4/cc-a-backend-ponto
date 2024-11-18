@@ -3,8 +3,11 @@ const app = express();
 
 const sequelize = require('./config/db');
 const Usuario = require('./models/Usuario');
+const Ponto = require('./models/Ponto');
 
-Usuario.sync()
+app.use(express.json());
+
+sequelize.sync()
     .then(() => {
         console.log("SUCESSO!");
     })
@@ -20,21 +23,39 @@ sequelize.authenticate()
         console.log (`Deu erro ao conectar no bd ${error}`)
     });
 
-//app.METODO('ROTA/CAMINHO', (req, res) => {})
-app.get('/users', (req, res) => {
-    res.send("Nessa rota vou retornar os usuários");
+//Usuario.create ({nome:"João", email:"joaotmarra@gmail.com", login:"jvtm", senha:"joaovitor", permissao:"USER"});
+
+//Rota que recupear todos os usuários da aplicação
+app.get('/usuarios', async (req, res) => {
+
+    const usuarios = await Usuario.findAll();
+    res.send(usuarios);
 });
 
-app.post('/users', (req, res) => {
-    res.send("Rota users usando post");
+//Rota que recupera um usuário do bd RELACIONAL
+app.get('/usuario/:id_usuario', async (req, res) => {
+    
+    const usuario = await Usuario.findAll({
+        where: {
+            id_usuario: req.params.id_usuario,
+        },
+    });
+
+    res.send(usuario);
 });
 
-app.get('/user/:id', (req, res) => {
-    res.send(`O parametro é ${req.params.id}`);
-});
+//rota que cria um usuario
+app.post('/usuario', async (req, res) => {
+    //Recuperar os parametros passados no body da requisição
+    const usuario = await Usuario.create({
+        nome: req.body.nome,
+        email: req.body.email,
+        login: req.body.login,
+        senha: senha.body.senha,
+        permissao:req.body.permissao
+    });
 
-app.post('/user/:id1-:id2', (req, res) => {
-    res.send(req.params);
+    res.send(req.body);
 });
 
 const PORT = 3001;
